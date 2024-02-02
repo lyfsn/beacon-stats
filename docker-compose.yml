@@ -11,5 +11,7 @@ services:
     build: ./beacon-stats-server
     ports:
       - "8080:8080"
+    volumes:
+      - ./config.yml:/usr/src/app/config.yml
     environment:
       - NODE_ENV=development

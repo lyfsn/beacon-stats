@@ -1,6 +1,9 @@
 const fastify = require("fastify")({ logger: true });
 const axios = require("axios");
-const { nodes } = require("./config.js");
+const fs = require("fs");
+const yaml = require("js-yaml");
+
+const config = yaml.load(fs.readFileSync('./config.yml', 'utf8'));
 
 fastify.register(require("@fastify/cors"), { origin: true });
 fastify.register(require("@fastify/websocket"));
@@ -15,7 +18,7 @@ async function sendHeaders(connection) {
 }
 
 async function sendData(connection, includePeers = true) {
-  for (const [name, baseUrl] of Object.entries(nodes)) {
+  for (const [name, baseUrl] of Object.entries(config.nodes)) {
     let data = {
       type: "data",
       data: {
