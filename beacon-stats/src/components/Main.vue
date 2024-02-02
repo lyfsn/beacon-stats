@@ -1,6 +1,6 @@
 
 <template>
-  <v-theme-provider theme="dark" with-background class="pa-10 h-screen">
+  <v-theme-provider theme="dark" with-background class="pa-10">
     <v-card title="Beacon Stats" subtitle="Endurance Devnet">
     </v-card>
 
@@ -25,6 +25,8 @@
     <br>
 
     <v-progress-linear :model-value="progress"></v-progress-linear>
+
+    <br>
 
   </v-theme-provider>
 </template>

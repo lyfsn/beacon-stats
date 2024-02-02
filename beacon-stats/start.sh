@@ -1,2 +1,2 @@
-docker build -t beacon-stats .
-docker run -it -p 3000:3000 beacon-stats
+export VITE_IP_ADDRESS=127.0.0.1
+yarn dev
