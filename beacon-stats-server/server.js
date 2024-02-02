@@ -60,6 +60,7 @@ const start = async () => {
   try {
     await fastify.listen({
       port: 8080,
+      host: "0.0.0.0",
       listenTextResolver: (address) => `Server is listening at ${address}`,
     });
   } catch (err) {
