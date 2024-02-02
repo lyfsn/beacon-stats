@@ -6,7 +6,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - IP_ADDRESS=${IP_ADDRESS}
+      - VUE_APP_IP_ADDRESS=${IP_ADDRESS}
 
   backend:
     build: ./beacon-stats-server
