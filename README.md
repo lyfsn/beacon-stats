@@ -30,7 +30,7 @@ This project provides a real-time monitoring dashboard for Ethereum Beacon nodes
 2. **Navigate to the project directory:**
 
    ```
-   cd path/to/project
+   cd beacon-stats
    ```
 
 3. **Start the project:**
