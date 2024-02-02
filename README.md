@@ -4,6 +4,8 @@
 
 This project provides a real-time monitoring dashboard for Ethereum Beacon nodes, designed to offer insights into various node metrics such as peer count and connectivity status. The dashboard is built using Vue.js for the frontend and Fastify for the backend, with WebSocket communication enabling live updates. This solution is aimed at developers and network administrators looking for an easy way to monitor the health and performance of their Ethereum Beacon nodes.
 
+![Dashboard Preview](preview.png)
+
 ## Features
 
 - **Real-Time Updates:** Utilizes WebSockets for live monitoring of node status, including peer count.
