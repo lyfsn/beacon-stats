@@ -56,7 +56,7 @@ export default {
 
     let ws;
     onMounted(() => {
-      ws = new WebSocket('ws://backend:8080/ws');
+      ws = new WebSocket(`ws://${process.env.IP_ADDRESS}:8080/ws`);
 
       ws.onopen = () => {
         ws.send('start');
