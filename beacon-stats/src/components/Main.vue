@@ -1,60 +1,47 @@
-
 <template>
   <v-theme-provider theme="dark" with-background class="pa-10">
-    <v-card title="Beacon Stats" subtitle="Endurance Devnet">
-    </v-card>
-
+    <v-card title="Beacon Stats" subtitle="Endurance Devnet"></v-card>
     <br>
-
-    <v-table theme="dark">
+    <v-table theme="dark" density="compact" class="custom-table">
       <thead>
         <tr>
           <th class="text-left" v-for="header in headers" :key="header.value">{{ header.title }}</th>
+          <th>Data Update</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.identifier" :class="{ 'updated-item': item.updated }">
-          <td>{{ item.identifier }}</td>
-          <td>{{ item.url }}</td>
-          <td>{{ item.peers }}</td>
+        <tr v-for="item in items" :key="item.name" :class="{ 'updated-item': item.updated }">
+          <td v-for="header in headers" :key="header.value">{{ item[header.value] }}</td>
+          <td>
+            <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
+          </td>
         </tr>
-
       </tbody>
     </v-table>
-
     <br>
-
-    <v-progress-linear :model-value="progress"></v-progress-linear>
-
-    <br>
-
   </v-theme-provider>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
 
 export default {
   setup() {
-    const headers = ref([]);
+    const headers = ref([
+      { title: "Name", value: "name" },
+      { title: "URL", value: "url" },
+      { title: "Version", value: "version" },
+      { title: "Peer ID", value: "peerID" },
+      { title: "Peers Count", value: "peerCount" },
+      { title: "Inbound", value: "inbound" },
+      { title: "Outbound", value: "outbound" },
+      { title: "Head Slot", value: "headSlot" },
+      { title: "Syncing", value: "isSyncing" },
+      { title: "Optimismtic", value: "isOptimistic" },
+      { title: "El Offline", value: "elOffline" },
+    ]);
     const items = ref([]);
-
-    const progress = ref(0);
-    let intervalId = null;
-
-    function resetProgress() {
-      progress.value = 0;
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-      }
-      intervalId = setInterval(() => {
-        if (progress.value < 100) {
-          progress.value += 10;
-        } else {
-          clearInterval(intervalId);
-        }
-      }, 1000);
-    }
 
     let ws;
     onMounted(() => {
@@ -66,23 +53,33 @@ export default {
 
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        if (message.type === 'headers') {
-          headers.value = message.data;
-          resetProgress()
-        } else if (message.type === 'data') {
-          const newData = message.data;
-          const index = items.value.findIndex(item => item.identifier === newData.identifier);
+        if (message.type === 'data') {
+          const newData = { ...message.data, progress: 100 };
+          const index = items.value.findIndex(item => item.name === newData.name);
 
           if (index !== -1) {
             items.value[index] = { ...newData, updated: true };
             setTimeout(() => {
-              items.value[index].updated = false;
+              if (items.value[index]) {
+                items.value[index].updated = false;
+              }
             }, 500);
-          } else {
-            items.value.push({ ...newData, updated: true });
-          }
 
-          resetProgress();
+            let progressInterval = 1000;
+            let totalDuration = 10000;
+            let decrement = 100 / (totalDuration / progressInterval);
+
+            let progressTimer = setInterval(() => {
+              if (items.value[index].progress > 0) {
+                items.value[index].progress -= decrement;
+              } else {
+                clearInterval(progressTimer);
+                items.value[index].progress = 0;
+              }
+            }, progressInterval);
+          } else {
+            items.value.push({ ...newData, updated: false });
+          }
         }
       };
 
@@ -98,15 +95,21 @@ export default {
     return {
       headers,
       items,
-      progress
     };
   },
 }
 </script>
 
+
+
 <style>
 .updated-item {
   transition: background-color 0.5s ease;
   color: yellow;
+}
+
+.custom-table th,
+.custom-table td {
+  font-size: 12px;
 }
 </style>
