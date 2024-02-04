@@ -13,7 +13,7 @@
         <tr v-for="item in items" :key="item.name"
           :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
           <td v-for="header in headers" :key="header.value"
-            :class="{ 'warn-value': item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
+            :class="{ 'warn-value': !checkMissingData(item) && item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
             {{ item[header.value] }}</td>
           <td>
             <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
@@ -123,20 +123,22 @@ export default {
   font-size: 12px;
 }
 
-.warn-value {
+/* Apply the border only when warn-value is true and not overridden by missing-data */
+.warn-value:not(.missing-data) {
   color: red !important; 
   border: 1px dashed red; 
+  border-radius: 5px;
 }
 
-.warn-row td {
-  color: #9cff9c; 
+/* Define the warn-row text color, modified to be more fitting for the dark theme */
+.warn-row td:not(.missing-data) {
+  color: #73e673; /* Adjusted green for better visibility */
 }
 
+/* Define the missing-data text color */
 .missing-data td {
-  color: #8fd1f5; 
+  color: #add8e6; /* Adjusted blue for better visibility */
 }
 
-.updated-item td {
-  border: 1px dashed red; 
-}
+
 </style>
