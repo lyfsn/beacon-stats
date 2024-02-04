@@ -2,7 +2,7 @@
   <v-theme-provider theme="dark" with-background class="pa-10">
     <v-card title="Beacon Stats" subtitle="Endurance Devnet"></v-card>
     <br>
-    <v-table theme="dark" density="compact" class="custom-table">
+    <v-table theme="dark" density="compact" class="data-table">
       <thead>
         <tr>
           <th class="text-left" v-for="header in headers" :key="header.value">{{ header.title }}</th>
@@ -11,7 +11,9 @@
       </thead>
       <tbody>
         <tr v-for="item in items" :key="item.name" :class="{ 'updated-item': item.updated }">
-          <td v-for="header in headers" :key="header.value">{{ item[header.value] }}</td>
+          <td v-for="header in headers" :key="header.value"
+            :class="{ 'warn-value': item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
+            {{ item[header.value] }}</td>
           <td>
             <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
           </td>
@@ -108,8 +110,12 @@ export default {
   color: yellow;
 }
 
-.custom-table th,
-.custom-table td {
+.data-table th,
+.data-table td {
   font-size: 12px;
+}
+
+.warn-value {
+  color: red;
 }
 </style>
