@@ -1,12 +1,14 @@
 <template>
-  <v-theme-provider theme="dark" with-background class="pa-10">
+  <v-theme-provider theme="dark" with-background class="pa-10" id="inspire">
     <v-card title="Beacon Stats" subtitle="Endurance Devnet"></v-card>
     <br>
     <v-table theme="dark" density="compact" class="data-table">
       <thead>
         <tr>
-          <th class="text-left" v-for="header in headers" :key="header.value">{{ header.title }}</th>
-          <th>Data Update</th>
+          <th class="text-left" v-for="header in headers" :key="header.value" :style="{ width: header.width }">
+            {{ header.title }}
+          </th>
+          <th>Latest Update</th>
         </tr>
       </thead>
       <tbody>
@@ -33,8 +35,8 @@ export default {
     const headers = ref([
       { title: "Name", value: "name" },
       { title: "URL", value: "url" },
-      { title: "Version", value: "version" },
-      { title: "Peer ID", value: "peerID" },
+      { title: "Version", value: "version", width: "250px" },
+      { title: "Peer ID", value: "peerID", width: "100px" },
       { title: "Peers Count", value: "peerCount" },
       { title: "Inbound", value: "inbound" },
       { title: "Outbound", value: "outbound" },
@@ -113,6 +115,10 @@ export default {
 </script>
 
 <style>
+#inspire {
+  height: 100vh;
+}
+
 .updated-item {
   transition: background-color 0.5s ease;
   color: yellow;
@@ -123,22 +129,18 @@ export default {
   font-size: 12px;
 }
 
-/* Apply the border only when warn-value is true and not overridden by missing-data */
 .warn-value:not(.missing-data) {
-  color: red !important; 
-  border: 1px dashed red; 
+  color: red !important;
+  border: 1px dashed red;
   border-radius: 5px;
 }
 
-/* Define the warn-row text color, modified to be more fitting for the dark theme */
 .warn-row td:not(.missing-data) {
-  color: #73e673; /* Adjusted green for better visibility */
+  color: #73e673;
 }
 
-/* Define the missing-data text color */
 .missing-data td {
-  color: #add8e6; /* Adjusted blue for better visibility */
+  color: #add8e6;
 }
-
 
 </style>
