@@ -12,4 +12,5 @@ nodes:
   geth-lighthouse-boot-1: "http://152.53.35.141:5052"
   geth-lighthouse-slasher: "http://152.53.35.141:7052"
   besu-prysm-no-validator: "http://152.53.32.124:4000"
+  erigon-prysm-fix-ethstats: "http://88.99.94.109:4500"
 
