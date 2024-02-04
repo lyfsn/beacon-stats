@@ -10,7 +10,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.name" :class="{ 'updated-item': item.updated }">
+        <tr v-for="item in items" :key="item.name"
+          :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
           <td v-for="header in headers" :key="header.value"
             :class="{ 'warn-value': item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
             {{ item[header.value] }}</td>
@@ -23,7 +24,6 @@
     <br>
   </v-theme-provider>
 </template>
-
 
 <script>
 import { ref, onMounted } from 'vue';
@@ -40,7 +40,7 @@ export default {
       { title: "Outbound", value: "outbound" },
       { title: "Head Slot", value: "headSlot" },
       { title: "Syncing", value: "isSyncing" },
-      { title: "Optimismtic", value: "isOptimistic" },
+      { title: "Optimistic", value: "isOptimistic" },
       { title: "El Offline", value: "elOffline" },
     ]);
     const items = ref([]);
@@ -94,15 +94,23 @@ export default {
       };
     });
 
+    const checkWarnRow = (item) => {
+      return Object.keys(item).some(key => item[key] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(key));
+    };
+
+    const checkMissingData = (item) => {
+      return headers.value.some(header => !['name', 'url'].includes(header.value) && item[header.value] === undefined);
+    };
+
     return {
       headers,
       items,
+      checkWarnRow,
+      checkMissingData,
     };
   },
 }
 </script>
-
-
 
 <style>
 .updated-item {
@@ -117,5 +125,13 @@ export default {
 
 .warn-value {
   color: red;
+}
+
+.warn-row {
+  background-color: green !important;
+}
+
+.missing-data {
+  background-color: blue !important;
 }
 </style>
