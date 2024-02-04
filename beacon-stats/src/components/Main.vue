@@ -128,10 +128,10 @@ export default {
 }
 
 .warn-row td {
-  color: #4CAF50 !important;
+  color: green !important;
 }
 
 .missing-data td {
-  color: #2196F3 !important; 
+  color: blue !important; 
 }
 </style>
