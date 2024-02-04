@@ -127,11 +127,11 @@ export default {
   color: red;
 }
 
-.warn-row {
-  background-color: green !important;
+.warn-row td {
+  color: #4CAF50 !important;
 }
 
-.missing-data {
-  background-color: blue !important;
+.missing-data td {
+  color: #2196F3 !important; 
 }
 </style>
