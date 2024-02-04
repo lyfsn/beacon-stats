@@ -124,14 +124,19 @@ export default {
 }
 
 .warn-value {
-  color: #e57373 !important;
+  color: red !important; 
+  border: 1px dashed red; 
 }
 
 .warn-row td {
-  color: #a5d6a7;
+  color: #9cff9c; 
 }
 
 .missing-data td {
-  color: #90caf9;
+  color: #8fd1f5; 
+}
+
+.updated-item td {
+  border: 1px dashed red; 
 }
 </style>
