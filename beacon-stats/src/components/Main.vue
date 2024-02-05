@@ -135,6 +135,12 @@ export default {
   border-radius: 5px;
 }
 
+.warn-value {
+  border-style: dashed !important; 
+  border-width: 1px !important;
+  border-color: green !important;
+}
+
 .warn-row td:not(.missing-data) {
   color: #73e673;
 }
