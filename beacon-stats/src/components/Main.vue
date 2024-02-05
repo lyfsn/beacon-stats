@@ -116,7 +116,7 @@ export default {
 
 <style>
 #inspire {
-  height: 100vh;
+  height: 100%;
 }
 
 .updated-item {
