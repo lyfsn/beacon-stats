@@ -141,13 +141,13 @@ export default {
 
 .warn-value:not(.missing-data) {
   color: red !important;
-  border: 1px dashed red;
+  border: 2px solid red;
   border-radius: 5px;
 }
 
 .warn-value {
-  border-style: dashed !important;
-  border-width: 1px !important;
+  border-style: solid !important;
+  border-width: 2px !important;
   border-color: green !important;
 }
 
