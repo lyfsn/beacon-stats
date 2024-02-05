@@ -16,9 +16,10 @@
           :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
           <td v-for="header in headers" :key="header.value"
             :class="{ 'warn-value': !checkMissingData(item) && item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
-            {{ item[header.value] }}</td>
+            {{ header.value === 'peerID' ? simplifyPeerID(item[header.value]) : item[header.value] }}
+          </td>
           <td>
-            <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
+          <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
           </td>
         </tr>
       </tbody>
@@ -35,8 +36,8 @@ export default {
     const headers = ref([
       { title: "Name", value: "name" },
       { title: "URL", value: "url" },
-      { title: "Version", value: "version", width: "250px" },
-      { title: "Peer ID", value: "peerID", width: "100px" },
+      { title: "Version", value: "version", width: "300px" },
+      { title: "Peer ID", value: "peerID", },
       { title: "Peers Count", value: "peerCount" },
       { title: "Inbound", value: "inbound" },
       { title: "Outbound", value: "outbound" },
@@ -104,13 +105,22 @@ export default {
       return headers.value.some(header => !['name', 'url'].includes(header.value) && item[header.value] === undefined);
     };
 
+    const simplifyPeerID = (peerID) => {
+      if (peerID && peerID.length > 10) {
+        return `${peerID.substr(0, 10)}...${peerID.substr(-10)}`;
+      }
+      return peerID;
+    }
+
     return {
       headers,
       items,
       checkWarnRow,
       checkMissingData,
+      simplifyPeerID
     };
   },
+
 }
 </script>
 
@@ -136,7 +146,7 @@ export default {
 }
 
 .warn-value {
-  border-style: dashed !important; 
+  border-style: dashed !important;
   border-width: 1px !important;
   border-color: green !important;
 }
@@ -148,5 +158,4 @@ export default {
 .missing-data td {
   color: #add8e6;
 }
-
 </style>
