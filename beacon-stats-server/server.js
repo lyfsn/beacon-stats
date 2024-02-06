@@ -15,6 +15,12 @@ async function fetchDatabaseInfo(baseUrl) {
   try {
     const response = await axios.get(`${baseUrl}/lighthouse/database/info`);
     const data = response.data;
+    if (data.anchor == null) {
+      return {
+        oldest_block_slot: "full",
+        state_lower_limit: "latest",
+      };
+    }
     return {
       oldest_block_slot: data.anchor.oldest_block_slot,
       state_lower_limit: data.anchor.state_lower_limit,

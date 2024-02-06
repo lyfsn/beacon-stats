@@ -19,11 +19,11 @@
               item[header.value] !== false &&
               ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value),
             'state-sync-value': header.value == 'oldestBlockSlot' && item[header.value] != 0 && item[header.value] != undefined
-            }">
+          }">
             {{ header.value === 'peerID' ? simplifyPeerID(item[header.value]) : item[header.value] }}
           </td>
           <td>
-            <v-progress-linear :model-value=" item.progress " reverse></v-progress-linear>
+            <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
           </td>
         </tr>
       </tbody>
