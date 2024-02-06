@@ -12,14 +12,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.name"
+        <tr v-for="item in   items  " :key="item.name"
           :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
-          <td v-for="header in headers" :key="header.value"
-            :class="{ 'warn-value': !checkMissingData(item) && item[header.value] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value) }">
+          <td v-for="header in   headers  " :key="header.value" :class="{
+            'warn-value': !checkMissingData(item) &&
+              item[header.value] !== false &&
+              ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value),
+            'state-sync-value': header.value == 'oldestBlockSlot' && item[header.value] != 0 && item[header.value] != undefined
+            }">
             {{ header.value === 'peerID' ? simplifyPeerID(item[header.value]) : item[header.value] }}
           </td>
           <td>
-          <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
+            <v-progress-linear :model-value=" item.progress " reverse></v-progress-linear>
           </td>
         </tr>
       </tbody>
@@ -45,6 +49,8 @@ export default {
       { title: "Syncing", value: "isSyncing" },
       { title: "Optimistic", value: "isOptimistic" },
       { title: "El Offline", value: "elOffline" },
+      { title: "Oldest Block Slot", value: "oldestBlockSlot" },
+      { title: "State Lower Limit", value: "stateLowerLimit" },
     ]);
     const items = ref([]);
 
@@ -157,5 +163,11 @@ export default {
 
 .missing-data td {
   color: #add8e6;
+}
+
+.state-sync-value {
+  border-style: solid !important;
+  border-width: 2px !important;
+  border-color: gray !important;
 }
 </style>

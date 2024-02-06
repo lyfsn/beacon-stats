@@ -11,20 +11,51 @@ fastify.register(require("@fastify/websocket"));
 let nodesData = {};
 const nodeUpdateInterval = config.refreshInterval || 10000; // Added to config.yml
 
+async function fetchDatabaseInfo(baseUrl) {
+  try {
+    const response = await axios.get(`${baseUrl}/lighthouse/database/info`);
+    const data = response.data;
+    return {
+      oldest_block_slot: data.anchor.oldest_block_slot,
+      state_lower_limit: data.anchor.state_lower_limit,
+    };
+  } catch (error) {
+    console.error(`Error fetching database info:`, error);
+    return null;
+  }
+}
+
 async function fetchDataForNode(name, baseUrl) {
   try {
-    const [version, peerCountResponse, peers, identityResponse, syncInfo] = await Promise.all([
-      axios.get(`${baseUrl}/eth/v1/node/version`),
-      axios.get(`${baseUrl}/eth/v1/node/peer_count`),
-      axios.get(`${baseUrl}/eth/v1/node/peers`),
-      axios.get(`${baseUrl}/eth/v1/node/identity`),
-      axios.get(`${baseUrl}/eth/v1/node/syncing`),
-    ]);
+    const [version, peerCountResponse, peers, identityResponse, syncInfo] =
+      await Promise.all([
+        axios.get(`${baseUrl}/eth/v1/node/version`),
+        axios.get(`${baseUrl}/eth/v1/node/peer_count`),
+        axios.get(`${baseUrl}/eth/v1/node/peers`),
+        axios.get(`${baseUrl}/eth/v1/node/identity`),
+        axios.get(`${baseUrl}/eth/v1/node/syncing`),
+      ]);
 
-    let inbound = 0, outbound = 0, peersIDs = peers.data.data.filter(peer => peer.state == "connected").map(peer => {
-      peer.direction == "inbound" ? inbound++ : outbound++;
-      return peer.peer_id;
-    });
+    let databaseInfo = null;
+    if (
+      version &&
+      version.data &&
+      version.data.data &&
+      version.data.data.version &&
+      version.data.data.version.startsWith("Lighthouse")
+    ) {
+      databaseInfo = await fetchDatabaseInfo(baseUrl);
+    }
+    console.log("databaseInfo for", name, ":", databaseInfo);
+
+    let inbound = 0,
+      outbound = 0,
+      peersIDs = peers.data.data
+        .filter((peer) => peer.state == "connected")
+        .map((peer) => {
+          peer.direction == "inbound" ? inbound++ : outbound++;
+          return peer.peer_id;
+        });
 
     return {
       name,
@@ -40,6 +71,10 @@ async function fetchDataForNode(name, baseUrl) {
       isSyncing: syncInfo.data.data.is_syncing,
       isOptimistic: syncInfo.data.data.is_optimistic,
       elOffline: syncInfo.data.data.el_offline,
+      oldestBlockSlot:
+        databaseInfo != null ? databaseInfo.oldest_block_slot : "",
+      stateLowerLimit:
+        databaseInfo != null ? databaseInfo.state_lower_limit : "",
     };
   } catch (error) {
     console.error(`Error fetching data from ${name} at ${baseUrl}:`, error);
@@ -73,7 +108,10 @@ fastify.register(async function (fastify) {
       if (messageStr === "start") {
         await sendData(connection, false);
         await sendData(connection, true);
-        const intervalId = setInterval(() => sendData(connection, true), nodeUpdateInterval);
+        const intervalId = setInterval(
+          () => sendData(connection, true),
+          nodeUpdateInterval
+        );
 
         connection.socket.on("close", () => clearInterval(intervalId));
       }
