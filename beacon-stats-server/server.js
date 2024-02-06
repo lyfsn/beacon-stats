@@ -17,7 +17,7 @@ async function fetchDatabaseInfo(baseUrl) {
     const data = response.data;
     if (data.anchor == null) {
       return {
-        oldest_block_slot: "full",
+        oldest_block_slot: "0",
         state_lower_limit: "latest",
       };
     }
