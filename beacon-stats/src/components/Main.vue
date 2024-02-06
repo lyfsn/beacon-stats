@@ -77,7 +77,7 @@ export default {
             }, 500);
 
             let progressInterval = 1000;
-            let totalDuration = 10000;
+            let totalDuration = 15000;
             let decrement = 100 / (totalDuration / progressInterval);
 
             let progressTimer = setInterval(() => {
