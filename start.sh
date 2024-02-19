@@ -9,5 +9,5 @@ fi
 echo "Using IP address: $IP_ADDRESS"
 
 
-docker-compose up --build -d
+docker compose up --build -d
 
