@@ -5,7 +5,7 @@ nodes:
   nethermind-lighthouse: "http://116.202.172.145:5052"
   geth-prysm: "http://37.27.37.199:4000"
   besu-teku: "http://95.217.233.186:4000"
-  geth-lighthouse-archive: "http://88.99.94.109:9052"
+  # geth-lighthouse-archive: "http://88.99.94.109:9052"
   nethermind-teku-no-validator: "http://88.99.94.109:4000"
   erigon-prysm-no-validator: "http://78.46.91.61:5000"
   geth-teku-repeat-key: "http://168.119.5.82:4010"
