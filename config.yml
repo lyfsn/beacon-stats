@@ -13,4 +13,5 @@ nodes:
   geth-lighthouse-slasher: "http://152.53.35.141:7052"
   besu-prysm-no-validator: "http://152.53.32.124:4000"
   erigon-prysm-fix-ethstats: "http://88.99.94.109:5000"
+  geth-teku: "http://35.202.241.236:4000"
 
