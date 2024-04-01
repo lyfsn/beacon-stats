@@ -56,7 +56,7 @@ export default {
 
     let ws;
     onMounted(() => {
-      ws = new WebSocket(`ws://${import.meta.env.VITE_IP_ADDRESS}:8080/ws`);
+      ws = new WebSocket(`ws://${import.meta.env.VITE_IP_ADDRESS}:8050/ws`);
 
       ws.onopen = () => {
         ws.send('start');
