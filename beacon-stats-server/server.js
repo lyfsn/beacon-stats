@@ -94,18 +94,25 @@ async function fetchDataForNode(name, baseUrl) {
 }
 
 async function sendData(connection, includeData = true) {
-  const updates = Object.entries(config.nodes).map(async ([name, baseUrl]) => {
-    if (includeData || !nodesData[name]) {
-      const data = await fetchDataForNode(name, baseUrl);
-      nodesData[name] = { type: "data", data };
-      connection.socket.send(JSON.stringify(nodesData[name]));
-    } else if (nodesData[name]) {
-      connection.socket.send(JSON.stringify(nodesData[name]));
+  const nodeUpdates = await Promise.all(
+    Object.entries(config.nodes).map(async ([name, baseUrl]) => {
+      if (includeData || !nodesData[name]) {
+        const data = await fetchDataForNode(name, baseUrl);
+        nodesData[name] = { type: "data", data };
+        return nodesData[name];
+      } else if (nodesData[name]) {
+        return nodesData[name];
+      }
+    })
+  );
+
+  nodeUpdates.forEach(update => {
+    if (update) {
+      connection.socket.send(JSON.stringify(update));
     }
   });
-
-  await Promise.all(updates);
 }
+
 
 fastify.register(async function (fastify) {
   fastify.get("/ws", { websocket: true }, (connection, req) => {
