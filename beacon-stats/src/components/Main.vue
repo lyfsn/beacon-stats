@@ -12,9 +12,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items  " :key="item.name"
+        <tr v-for="item in items" :key="item.name"
           :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
-          <td v-for="header in headers  " :key="header.value" :class="{
+          <td v-for="header in headers" :key="header.value" :class="{
             'warn-value': !checkMissingData(item) &&
               item[header.value] !== false &&
               ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value),
@@ -23,7 +23,7 @@
             {{ header.value === 'peerID' ? simplifyPeerID(item[header.value]) : item[header.value] }}
           </td>
           <td>
-            <v-progress-linear :model-value="item.progress" reverse></v-progress-linear>
+            <v-progress-linear v-model="item.progress" reverse></v-progress-linear>
           </td>
         </tr>
       </tbody>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 export default {
   setup() {
@@ -41,7 +41,7 @@ export default {
       { title: "Name", value: "name", width: "200px" },
       { title: "URL", value: "url" },
       { title: "Version", value: "version", width: "300px" },
-      { title: "Peer ID", value: "peerID", },
+      { title: "Peer ID", value: "peerID" },
       { title: "Peers Count", value: "peerCount" },
       { title: "Inbound", value: "inbound" },
       { title: "Outbound", value: "outbound" },
@@ -53,21 +53,16 @@ export default {
       { title: "State Lower Limit", value: "stateLowerLimit" },
     ]);
     const items = ref([]);
-
     let ws;
+
     onMounted(() => {
       ws = new WebSocket(`ws://${import.meta.env.VITE_IP_ADDRESS}:8050/ws`);
-
-      ws.onopen = () => {
-        ws.send('start');
-      };
-
+      ws.onopen = () => { ws.send('start'); };
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
         if (message.type === 'data') {
           const newData = { ...message.data, progress: 100 };
           const index = items.value.findIndex(item => item.name === newData.name);
-
           if (index !== -1) {
             items.value[index] = { ...newData, updated: true };
             setTimeout(() => {
@@ -103,6 +98,12 @@ export default {
       };
     });
 
+    onBeforeUnmount(() => {
+      if (ws) {
+        ws.close();
+      }
+    });
+
     const checkWarnRow = (item) => {
       return Object.keys(item).some(key => item[key] !== false && ['isSyncing', 'isOptimistic', 'elOffline'].includes(key));
     };
@@ -116,7 +117,7 @@ export default {
         return `${peerID.substr(0, 4)}...${peerID.substr(-4)}`;
       }
       return peerID;
-    }
+    };
 
     return {
       headers,
@@ -126,7 +127,6 @@ export default {
       simplifyPeerID
     };
   },
-
 }
 </script>
 
