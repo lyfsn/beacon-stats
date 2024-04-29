@@ -2,7 +2,7 @@ nodes:
   nethermind-prysm: "http://78.46.91.61:4000"
   geth-lighthouse-archive: "http://168.119.5.82:5052"
   nethermind-lighthouse: "http://116.202.172.145:5052"
-  erigon-lighthouse: "http://95.217.233.186:5052"
+  geth-lighthouse-2: "http://95.217.233.186:5052"
   geth-lighthouse: "http://37.27.12.92:5052"
   besu-teku: "http://167.235.7.52:4000"
   erigon-lodestar: "http://135.181.2.253:4000"

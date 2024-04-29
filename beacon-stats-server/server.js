@@ -63,25 +63,24 @@ async function fetchDataForNode(name, baseUrl) {
           return peer.peer_id;
         });
 
-    return {
-      name,
-      url: baseUrl,
-      updated: true,
-      version: version.data.data.version,
-      peerCount: peerCountResponse.data.data.connected,
-      peersIDs,
-      inbound,
-      outbound,
-      peerID: identityResponse.data.data.peer_id,
-      headSlot: syncInfo.data.data.head_slot,
-      isSyncing: syncInfo.data.data.is_syncing,
-      isOptimistic: syncInfo.data.data.is_optimistic,
-      elOffline: syncInfo.data.data.el_offline,
-      oldestBlockSlot:
-        databaseInfo != null ? databaseInfo.oldest_block_slot : "",
-      stateLowerLimit:
-        databaseInfo != null ? databaseInfo.state_lower_limit : "",
-    };
+      return {
+        name,
+        url: baseUrl,
+        updated: true,
+        version: version.data.data.version,
+        peerCount: peerCountResponse.data.data.connected,
+        peersIDs,
+        inbound,
+        outbound,
+        headSlot: syncInfo.data.data.head_slot,
+        isSyncing: syncInfo.data.data.is_syncing,
+        isOptimistic: syncInfo.data.data.is_optimistic,
+        elOffline: syncInfo.data.data.el_offline,
+        oldestBlockSlot:
+          databaseInfo != null ? databaseInfo.oldest_block_slot : "",
+        stateLowerLimit:
+          databaseInfo != null ? databaseInfo.state_lower_limit : "",
+      };
   } catch (error) {
     console.error(`Error fetching data from ${name} at ${baseUrl}:`, error);
     return {
