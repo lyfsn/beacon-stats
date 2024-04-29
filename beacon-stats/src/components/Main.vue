@@ -12,9 +12,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in   items  " :key="item.name"
+        <tr v-for="item in items  " :key="item.name"
           :class="{ 'updated-item': item.updated, 'warn-row': checkWarnRow(item), 'missing-data': checkMissingData(item) }">
-          <td v-for="header in   headers  " :key="header.value" :class="{
+          <td v-for="header in headers  " :key="header.value" :class="{
             'warn-value': !checkMissingData(item) &&
               item[header.value] !== false &&
               ['isSyncing', 'isOptimistic', 'elOffline'].includes(header.value),
@@ -38,7 +38,7 @@ import { ref, onMounted } from 'vue';
 export default {
   setup() {
     const headers = ref([
-      { title: "Name", value: "name" },
+      { title: "Name", value: "name", width: "200px" },
       { title: "URL", value: "url" },
       { title: "Version", value: "version", width: "300px" },
       { title: "Peer ID", value: "peerID", },
@@ -112,8 +112,8 @@ export default {
     };
 
     const simplifyPeerID = (peerID) => {
-      if (peerID && peerID.length > 10) {
-        return `${peerID.substr(0, 10)}...${peerID.substr(-10)}`;
+      if (peerID && peerID.length > 8) {
+        return `${peerID.substr(0, 4)}...${peerID.substr(-4)}`;
       }
       return peerID;
     }
